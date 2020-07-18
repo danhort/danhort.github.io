@@ -4,8 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>danhort</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-    <a href="mailto:danielhortonwellings@gmail.com">danielhortonwellings@gmail.com</a>
+    <style>
+        section {
+            border: 1px solid grey;
+            padding: 20px;
+            margin: 20px;
+        }
+        .github-repo {
+            position: relative;
+        }
+        .github-repo:hover .readme-wrapper {
+            display: block;
+        }
+        .readme-wrapper {
+            position: absolute;
+            top: -100px;
+            left: 100%;
+            display: none;
+            z-index: 1;
+        }
+        .readme-container {
+            border: 1px solid grey;
+            background: white;
+            margin: 20px;
+            padding: 20px;
+        }
+    </style>
+    <section>
+        <p><a href="mailto:danielhortonwellings@gmail.com">danielhortonwellings@gmail.com</a></p>
+        <p><a href="https://github.com/danhort">github.com/danhort</a></p>
+    </section>
+    <section>
+        <ul>
+            <li>PHP</li>
+            <li>Javascript</li>
+            <li>Laravel</li>
+            <li>Magento</li>
+        </ul>
+    </section>
+    <section>
+        <ul>
+            <li><span class="github-repo"><a href="https://github.com/danhort/docker-magento">Docker Magento</a></span></li>
+            <li><span class="github-repo"><a href="https://github.com/danhort/dotfiles">Dotfiles</a></span></li>
+        </ul>
+        <div id="test"></div>
+    </section>
+    <script>
+        let readmeInfo = document.querySelectorAll('.github-repo');
+        readmeInfo.forEach(function(info) {
+            let request = new XMLHttpRequest();
+            let path = info.querySelector('a').href.replace(/^.*\/\/[^\/]+/, '');
+            request.open("GET", "https://raw.githubusercontent.com" + path + "/master/README.md");
+            request.onreadystatechange = function() {
+                if(this.readyState === 4 && this.status === 200) {
+                    info.appendChild(createInfoElement(this.responseText));
+                }
+            };
+            request.send();
+        });
+
+        function createInfoElement(text) {
+            let wrapper = document.createElement('div');
+            wrapper.setAttribute('class', 'readme-wrapper');
+            let container = document.createElement('div');
+            container.setAttribute('class', 'readme-container');
+            container.innerHTML = marked(text);
+            wrapper.appendChild(container);
+            return wrapper;
+        }
+    </script>
 </body>
 </html>
